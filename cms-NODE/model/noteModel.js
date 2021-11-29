@@ -107,31 +107,6 @@ async function delNote(data) {
   return mysql.queryOne("delete from note_list where note_id = ?", [noteId])
 }
 
-// 获取前台用户
-async function getFrontUserList(data, page = 1, size = 10) {
-  const { keyWord } = data
-
-  let sql = `select * from front_user_list`
-  let values = []
-  if (keyWord) {
-    // 标题筛选
-    console.log(title)
-    sql += " and nick_name like ?"
-    values.push(`%${keyWord}%`)
-  }
-
-  // 排序
-  sql += " ORDER BY front_user_id DESC"
-
-  // 分页
-  sql += " limit ?, ?"
-  values.push((page - 1) * size || 0, size)
-
-  sql += ";SELECT FOUND_ROWS() as total"
-
-  return $mysql.query(sql, values)
-}
-
 module.exports = {
   test,
   getLastSelectTotal,
@@ -143,5 +118,4 @@ module.exports = {
   addNote,
   updateNote,
   delNote,
-  getFrontUserList,
 }

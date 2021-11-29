@@ -159,19 +159,6 @@ const getDetail = async (req, res) => {
   }
 }
 
-// 获取内容列表
-const getFrontUserList = async (req, res) => {
-  // const { user_id: userId } = req.userInfo
-  const { keyWord, page = 1, size = 20 } = req.query
-  const frontUserList = await noteModel.getFrontUserList(
-    { keyWord },
-    page,
-    size
-  )
-  const [list, [{ total = 0 }]] = frontUserList.data
-  res.$success({ list, total })
-}
-
 module.exports = {
   index,
   login,
@@ -182,5 +169,4 @@ module.exports = {
   updateNote,
   delNote,
   getDetail,
-  getFrontUserList,
 }

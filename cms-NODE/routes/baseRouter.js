@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const noteModule = require("../module/noteModule")
+const userModule = require("../module/userModule")
 const { tokenVerification } = require("../utils/middlewares")
 
 // 路由中间件
@@ -15,6 +16,7 @@ router.put("/note", tokenVerification, noteModule.updateNote) // 修改内容
 router.delete("/note", tokenVerification, noteModule.delNote) // 删除内容
 router.get("/note", tokenVerification, noteModule.getDetail) // 获取内容详情
 
-router.get("/getFrontUserList", tokenVerification, noteModule.getFrontUserList) // 获取列表
+router.get("/getFrontUserList", tokenVerification, userModule.getFrontUserList) // 获取前台用户
+router.put("/updateFrontUser", tokenVerification, userModule.updateFrontUser) // 启/禁用前台用户
 
 module.exports = router
