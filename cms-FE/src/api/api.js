@@ -197,3 +197,12 @@ export function updateFrontUser(data) {
     data,
   })
 }
+
+// 文章审核
+export function checkNote(data) {
+  return request({
+    url: '/checkNote',
+    method: 'put',
+    data,
+  })
+}

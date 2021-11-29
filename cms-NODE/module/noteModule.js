@@ -96,7 +96,6 @@ const addNote = async (req, res) => {
 // 更新内容
 const updateNote = async (req, res) => {
   const { title, note, note_id: noteId } = req.body
-  const { user_id: userId } = req.userInfo
 
   if (!(title && noteId)) {
     return res.$fail(1, "参数错误")
@@ -105,13 +104,8 @@ const updateNote = async (req, res) => {
   const noteDetail = await noteModel.getNoteDetailById({ noteId })
   if (noteDetail) {
     // 存在
-    const noteDetailData = noteDetail.data
-    if (noteDetailData.user_id === userId) {
-      await noteModel.updateNote({ noteId, title, note })
-      res.$success()
-    } else {
-      res.$fail(1, "您没有操作权限")
-    }
+    await noteModel.updateNote({ noteId, title, note })
+    res.$success()
   } else {
     // 不存在
     res.$fail(1, "内容不存在")
@@ -159,6 +153,23 @@ const getDetail = async (req, res) => {
   }
 }
 
+const checkNote = async (req, res) => {
+  const { id: noteId, state } = req.body
+  if (!(state && noteId)) {
+    return res.$fail(1, "参数错误")
+  }
+
+  const noteDetail = await noteModel.getNoteDetailById({ noteId })
+  if (noteDetail) {
+    // 存在
+    await noteModel.checkNote({ noteId, state })
+    res.$success()
+  } else {
+    // 不存在
+    res.$fail(1, "文章不存在")
+  }
+}
+
 module.exports = {
   index,
   login,
@@ -169,4 +180,5 @@ module.exports = {
   updateNote,
   delNote,
   getDetail,
+  checkNote,
 }

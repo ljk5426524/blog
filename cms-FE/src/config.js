@@ -1,6 +1,6 @@
 const baseUrlList = {
   // 服务器环境
-  local: 'http://127.0.0.1:5000/note',
+  local: 'http://127.0.0.1:5000/blog',
   dev: 'http://dev.xxx.com/interface-manager', // 开发
   test: 'http://test.xxx.com/interface-manager', // 测试
   production: 'http://production.xxx.com/interface-manager', // 生产

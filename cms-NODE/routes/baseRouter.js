@@ -13,6 +13,7 @@ router.put("/changePassword", tokenVerification, noteModule.changePassword) // �
 router.get("/getList", tokenVerification, noteModule.getList) // 获取列表
 router.post("/note", tokenVerification, noteModule.addNote) // 增加内容
 router.put("/note", tokenVerification, noteModule.updateNote) // 修改内容
+router.put("/checkNote", tokenVerification, noteModule.checkNote) // 修改内容
 router.delete("/note", tokenVerification, noteModule.delNote) // 删除内容
 router.get("/note", tokenVerification, noteModule.getDetail) // 获取内容详情
 

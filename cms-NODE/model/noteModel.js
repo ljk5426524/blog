@@ -34,7 +34,7 @@ async function registerUser(data) {
 async function changePassword(data) {
   const { userId } = data
   delete data.userId
-  return mysql.queryOne("update user_list set ? where user_id = ?", [
+  return mysql.queryOne("update user_list set ? where front_user_id = ?", [
     data,
     userId,
   ])
@@ -49,14 +49,13 @@ async function getNoteDetailById(data) {
 // 获取内容列表
 async function getNoteListByUserId(data, page = 1, size = 10) {
   const { userId, title, createTime } = data
-
-  let sql = `select * from note_list where user_id = ?`
-  let values = [userId]
+  let sql = `select n.note_id,n.title,n.note,ul.nick_name ,n.create_time,n.update_time,n.state from note_list n LEFT JOIN front_user_list ul on ul.front_user_id = n.front_user_id `
+  let values = []
 
   if (title) {
     // 标题筛选
     console.log(title)
-    sql += " and title like ?"
+    sql += " where title like ?"
     values.push(`%${title}%`)
   }
 
@@ -74,18 +73,23 @@ async function getNoteListByUserId(data, page = 1, size = 10) {
   values.push((page - 1) * size || 0, size)
 
   sql += ";SELECT FOUND_ROWS() as total"
-
   return $mysql.query(sql, values)
 }
 
 // 增加内容
 async function addNote(data) {
-  const { userId: user_id, title, note } = data
+  const { userId: front_user_id, title, note } = data
   const createTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
   const updateTime = createTime
 
   return mysql.queryOne("insert into note_list set ?", [
-    { user_id, title, note, update_time: updateTime, create_time: createTime },
+    {
+      front_user_id,
+      title,
+      note,
+      update_time: updateTime,
+      create_time: createTime,
+    },
   ])
 }
 
@@ -100,6 +104,15 @@ async function updateNote(data) {
   ])
 }
 
+async function checkNote(data) {
+  const { noteId, state } = data
+  const updateTime = dayjs().format("YYYY-MM-DD HH:mm:ss")
+
+  return mysql.queryOne("update note_list set ? where note_id = ?", [
+    { state, update_time: updateTime },
+    noteId,
+  ])
+}
 // 删除内容
 async function delNote(data) {
   const { noteId } = data
@@ -118,4 +131,5 @@ module.exports = {
   addNote,
   updateNote,
   delNote,
+  checkNote,
 }

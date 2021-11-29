@@ -7,7 +7,6 @@
             <el-form
               :inline="true"
               :model="searchForm"
-              size="small"
               @keyup.enter.native="submitSearchForm('searchForm')"
             >
               <el-form-item label="">
@@ -58,6 +57,7 @@
             />
             <el-table-column label="标题" prop="title" align="center" />
             <el-table-column label="内容" prop="note" align="center" />
+            <el-table-column label="用户昵称" prop="nick_name" align="center" />
             <el-table-column
               label="修改时间"
               prop="update_time"
@@ -70,6 +70,12 @@
               align="center"
               width="100px"
             />
+            <el-table-column label="状态" align="center" width="100px">
+              <template slot-scope="scope">
+                {{ scope.row.state | fomartState }}
+              </template>
+            </el-table-column>
+
             <el-table-column
               label="操作"
               prop="operation"
@@ -78,15 +84,25 @@
             >
               <template slot-scope="scope">
                 <el-button
+                  v-if="scope.row.state === 2"
+                  type="text"
+                  @click="handleTableRow(scope.row, 'check')"
+                >
+                  审核
+                </el-button>
+                <el-button
                   type="text"
                   @click="handleTableRow(scope.row, 'update')"
-                  >编辑</el-button
                 >
+                  编辑
+                </el-button>
+
                 <el-button
                   type="text"
                   @click="handleTableRow(scope.row, 'delete')"
-                  >删除</el-button
                 >
+                  删除
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -141,17 +157,31 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button size="small" @click="addDataDialog.visible = false"
-            >取 消</el-button
-          >
+          <el-button size="small" @click="addDataDialog.visible = false">
+            取 消
+          </el-button>
           <el-button
             type="primary"
             :loading="submitLoading"
             size="small"
             @click="submitAddDataForm('addDataForm')"
-            >确 定</el-button
           >
+            确 定
+          </el-button>
         </div>
+      </el-dialog>
+      <el-dialog
+        title="审核"
+        :visible.sync="checkDialogShow"
+        width="30%"
+        :before-close="handleClose"
+      >
+        <el-radio v-model="checkState" :label="1">审核通过并发布</el-radio>
+        <el-radio v-model="checkState" :label="2">审核不通过</el-radio>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="checkDialogShow = false">取 消</el-button>
+          <el-button type="primary" @click="changeNoteState"> 确 定 </el-button>
+        </span>
       </el-dialog>
     </div>
     <router-view ref="routerView" />
@@ -160,6 +190,18 @@
 
 <script>
 export default {
+  filters: {
+    fomartState(val) {
+      const map = {
+        1: '草稿',
+        2: '待审核',
+        3: '审核通过',
+        4: '审核不通过',
+        5: '已删除',
+      }
+      return map[val]
+    },
+  },
   data() {
     return {
       isRouterViewRun: false,
@@ -190,6 +232,8 @@ export default {
         note: [{ required: true, message: '请输入内容', trigger: 'blur' }],
       },
       submitLoading: false,
+      checkDialogShow: false,
+      checkState: 1,
     }
   },
 
@@ -326,6 +370,9 @@ export default {
         this.deleteTableRowData(data)
       } else if (handleType === 'use') {
         this.changeUseStateTableRowData(data)
+      } else if (handleType === 'check') {
+        this.checkDialogShow = true
+        this.checkData = data
       }
     },
 
@@ -395,6 +442,26 @@ export default {
       this.$refs[formName] && this.$refs[formName].resetFields()
       // details: https://github.com/ElemeFE/element/issues/1534#issuecomment-285940974
       this[formName] = Object.assign({}, this.$options.data()[formName])
+    },
+    handleClose(done) {
+      this.checkDialogShow = false
+    },
+    changeNoteState() {
+      const state = this.checkState
+      const { note_id } = this.checkData
+      this.$api
+        .checkNote({
+          id: note_id,
+          state: state === 1 ? 3 : 4,
+        })
+        .then((res) => {
+          this.$message({
+            message: '审核成功',
+            type: 'success',
+          })
+          this.checkDialogShow = false
+          this.getList()
+        })
     },
   },
 }
