@@ -71,23 +71,23 @@ export const constantRoutes = [
     ],
   },
 
-  {
-    path: '/note',
-    component: Layout,
-    redirect: '/note/list',
-    meta: {
-      title: '文章管理',
-      icon: 'el-icon-menu',
-    },
-    children: [
-      {
-        path: 'list',
-        name: 'List',
-        component: () => import('@/views/note/list'),
-        meta: { title: '文章管理列表' },
-      },
-    ],
-  },
+  // {
+  //   path: '/note',
+  //   component: Layout,
+  //   redirect: '/note/list',
+  //   meta: {
+  //     title: '文章管理',
+  //     icon: 'el-icon-menu',
+  //   },
+  //   children: [
+  //     {
+  //       path: 'list',
+  //       name: 'List',
+  //       component: () => import('@/views/note/list'),
+  //       meta: { title: '文章管理列表' },
+  //     },
+  //   ],
+  // },
   {
     path: '/user',
     component: Layout,

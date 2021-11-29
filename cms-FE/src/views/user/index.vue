@@ -7,13 +7,12 @@
             <el-form
               :inline="true"
               :model="searchForm"
-              size="small"
               @keyup.enter.native="submitSearchForm('searchForm')"
             >
               <el-form-item label="">
                 <el-input
                   v-model="searchForm.keyWord"
-                  placeholder="用户昵称"
+                  placeholder="请输入用户昵称"
                   clearable
                 />
               </el-form-item>
@@ -52,6 +51,21 @@
               </template>
             </el-table-column>
             <el-table-column label="年龄" prop="age" align="center" />
+            <el-table-column label="状态" prop="state" align="center">
+              <template slot-scope="scope">
+                {{ scope.row.state === 1 ? '已启用' : '已禁用' }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="创建时间"
+              prop="create_time"
+              align="center"
+            />
+            <el-table-column
+              label="修改时间"
+              prop="update_time"
+              align="center"
+            />
             <el-table-column
               label="操作"
               prop="operation"
@@ -59,16 +73,9 @@
               align="center"
             >
               <template slot-scope="scope">
-                <el-button
-                  type="text"
-                  @click="handleTableRow(scope.row, 'update')"
-                  >编辑</el-button
-                >
-                <el-button
-                  type="text"
-                  @click="handleTableRow(scope.row, 'delete')"
-                  >删除</el-button
-                >
+                <el-button type="text" @click="changeState(scope.row)">
+                  {{ scope.row.state === 1 ? '禁用' : '启用' }}
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -86,55 +93,6 @@
           />
         </div>
       </div>
-
-      <!-- 新增与更新弹框 -->
-      <!-- <el-dialog
-        width="500px"
-        :title="addDataDialog.title"
-        :visible.sync="addDataDialog.visible"
-        :close-on-click-modal="false"
-        append-to-body
-        @closed="resetForm('addDataForm')"
-      >
-        <el-form
-          ref="addDataForm"
-          :model="addDataForm"
-          :rules="addDataFormRules"
-          label-width="100px"
-          size="small"
-        >
-          <el-form-item label="标题" prop="title">
-            <el-input
-              v-model="addDataForm.title"
-              type="text"
-              placeholder="请输入标题"
-              auto-complete="off"
-              maxlength="50"
-            />
-          </el-form-item>
-          <el-form-item label="内容" prop="note">
-            <el-input
-              v-model="addDataForm.note"
-              type="textarea"
-              placeholder="请输入内容"
-              maxlength="500"
-              :rows="5"
-            />
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button size="small" @click="addDataDialog.visible = false"
-            >取 消</el-button
-          >
-          <el-button
-            type="primary"
-            :loading="submitLoading"
-            size="small"
-            @click="submitAddDataForm('addDataForm')"
-            >确 定</el-button
-          >
-        </div>
-      </el-dialog> -->
     </div>
   </div>
 </template>
@@ -161,28 +119,51 @@ export default {
     getUserList() {
       this.$api
         .getFrontUserList({
-          keyWord: '',
+          keyWord: this.searchForm.keyWord,
         })
         .then((res) => {
-          console.log(res)
           this.list = res.data.list
+          this.pagination.total = res.data.total
         })
     },
     submitSearchForm(formName) {
       console.log('searchForm', this.searchForm)
       this.pagination.page = 1
-      this.getList()
+      this.getUserList()
     },
     handleCurrentChange(page) {
       this.pagination.page = page
 
-      this.getList()
+      this.getUserList()
     },
 
     handleSizeChange(size) {
       this.pagination.limit = size
 
-      this.getList()
+      this.getUserList()
+    },
+    changeState(rowData) {
+      const { state, front_user_id } = rowData
+      this.$confirm(`是否确认${state === 1 ? '禁用' : '启用'}该用户?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          this.$api
+            .updateFrontUser({
+              userId: front_user_id,
+              state: state === 1 ? 2 : 1,
+            })
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '操作成功!',
+              })
+              this.getUserList()
+            })
+        })
+        .catch(() => {})
     },
   },
 }

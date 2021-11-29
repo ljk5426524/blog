@@ -180,11 +180,20 @@ export function getNoteDetail(data) {
   })
 }
 
-// 获取记事详情
+// 获取前台用户列表
 export function getFrontUserList(data) {
   return request({
     url: '/getFrontUserList',
     method: 'get',
+    data,
+  })
+}
+
+// 启/禁用前台用户
+export function updateFrontUser(data) {
+  return request({
+    url: '/updateFrontUser',
+    method: 'put',
     data,
   })
 }
