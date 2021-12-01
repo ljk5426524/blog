@@ -206,3 +206,21 @@ export function checkNote(data) {
     data,
   })
 }
+
+// 评论列表
+export function getCommentList(data) {
+  return request({
+    url: '/getCommentList',
+    method: 'get',
+    data,
+  })
+}
+
+// 编辑评论（置顶/删除）
+export function updateComment(data) {
+  return request({
+    url: '/updateComment',
+    method: 'put',
+    data,
+  })
+}

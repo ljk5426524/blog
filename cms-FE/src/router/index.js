@@ -94,8 +94,8 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/note/list',
     meta: {
-      title: '文章管理',
-      icon: 'el-icon-menu',
+      title: '文章',
+      icon: 'el-icon-notebook-1',
     },
     children: [
       {
@@ -103,6 +103,23 @@ export const constantRoutes = [
         name: 'List',
         component: () => import('@/views/note/list'),
         meta: { title: '文章管理' },
+      },
+    ],
+  },
+  {
+    path: '/comment',
+    component: Layout,
+    redirect: '/comment/list',
+    meta: {
+      title: '评论',
+      icon: 'el-icon-chat-dot-round',
+    },
+    children: [
+      {
+        path: 'list',
+        name: 'List',
+        component: () => import('@/views/comment/index'),
+        meta: { title: '评论管理' },
       },
     ],
   },

@@ -28,8 +28,9 @@
                 <el-button
                   type="primary"
                   @click="submitSearchForm('searchForm')"
-                  >搜索</el-button
                 >
+                  搜索
+                </el-button>
               </el-form-item>
             </el-form>
           </div>

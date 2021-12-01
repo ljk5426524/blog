@@ -1,5 +1,4 @@
 const userModel = require("../model/userModel")
-const { md5 } = require("../utils/common")
 
 // 获取前台用户列表
 const getFrontUserList = async (req, res) => {
