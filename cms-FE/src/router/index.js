@@ -123,6 +123,15 @@ export const constantRoutes = [
       },
     ],
   },
+
+  // front
+  {
+    path: '/home',
+    meta: {
+      title: 'xxxx',
+    },
+    component: () => import('@/views/front/home'),
+  },
 ]
 
 /**
