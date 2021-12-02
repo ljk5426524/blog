@@ -232,3 +232,10 @@ export function getFrontNoteList(data) {
     data,
   })
 }
+export function getNoteDeatil(data) {
+  return request({
+    url: '/getNoteDeatil',
+    method: 'get',
+    data,
+  })
+}

@@ -3,8 +3,12 @@ const commentModel = require("../model/commentModel")
 
 // 获取评论列表
 const getCommentList = async (req, res) => {
-  const { keyWord, page = 1, size = 10 } = req.query
-  const commentList = await commentModel.getCommentList({ keyWord }, page, size)
+  const { keyWord, noteId, page = 1, size = 10 } = req.query
+  const commentList = await commentModel.getCommentList(
+    { keyWord, noteId },
+    page,
+    size
+  )
   const [list, [{ total = 0 }]] = commentList.data
   res.$success({ list, total })
 }

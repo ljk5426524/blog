@@ -114,7 +114,6 @@ export default {
   },
   mounted() {
     this.getCommentList()
-    this.$api.getFrontNoteList({ page: 1, limit: 10 }).then((res) => {})
   },
   methods: {
     // 搜索

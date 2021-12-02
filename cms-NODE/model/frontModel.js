@@ -36,8 +36,12 @@ GROUP BY
   return $mysql.query(sql, values)
 }
 
-async function getCommentList() {}
+async function getNoteDetail(data) {
+  const { noteId } = data
+  return mysql.queryOne("select * from note_list where note_id = ?", [noteId])
+}
 
 module.exports = {
   getNoteList,
+  getNoteDetail,
 }

@@ -43,6 +43,7 @@ async function changePassword(data) {
 // 获取内容详情
 async function getNoteDetailById(data) {
   const { noteId } = data
+  console.log("noteId", noteId)
   return mysql.queryOne("select * from note_list where note_id = ?", [noteId])
 }
 

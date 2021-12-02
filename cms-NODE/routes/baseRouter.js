@@ -27,5 +27,6 @@ router.put("/updateFrontUser", tokenVerification, userModule.updateFrontUser) //
 router.get("/getCommentList", tokenVerification, commentModule.getCommentList) // 评论列表
 router.put("/updateComment", tokenVerification, commentModule.updateComment) // 评论列表
 
-router.get("/getFrontnoteList", tokenVerification, frontModule.getNoteList)
+router.get("/getFrontnoteList", tokenVerification, frontModule.getNoteList) // 我的文章列表
+router.get("/getNoteDeatil", tokenVerification, frontModule.getNoteDeatil) // 文章详情
 module.exports = router
