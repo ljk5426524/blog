@@ -49,22 +49,33 @@
     <el-main>
       <el-row class="main-content" :gutter="30">
         <el-col :span="18" class="content-left">
-          <el-card class="content-item" v-for="o in 4" :key="o" shadow="hover">
+          <el-card
+            class="content-item"
+            v-for="item in frontNoteList"
+            :key="item.note_id"
+            shadow="hover"
+          >
             <div class="text item">
-              <h3>文章标题</h3>
+              <h3>{{ item.title }}</h3>
               <p class="art-text">
-                文章内容文章内容文章内容文章内容文章内容文章内容
+                {{ item.note }}
               </p>
               <div class="art-info">
-                <ul>
+                <ul
+                  v-for="(comment, key) in JSON.parse(item.comment)"
+                  :key="key"
+                >
                   <li>
-                    <img src="" alt="" />
-                    <span>作者名</span>
+                    <img src="../../assets/images/defaultImg.jpg" alt="" />
+                    <span>{{ comment.nickName }}</span>
                   </li>
-                  <li><i class="el-icon-time"></i> <span>2021-12-2</span></li>
+                  <li>
+                    <i class="el-icon-time"></i>
+                    <span>{{ comment.createTime }}</span>
+                  </li>
                   <li>
                     <i class="el-icon-chat-dot-square"></i>
-                    <span>评论</span>
+                    <span>{{ comment.content }}</span>
                   </li>
                 </ul>
               </div>
@@ -94,7 +105,6 @@
             <a class="site-link" href="#" title="**的个人博客" rel="home"
               >***</a
             >
-
             <a href="#" rel="external nofollow" target="_blank"
               >皖ICP备19001116号-1</a
             >
@@ -138,6 +148,7 @@ export default {
       activeIndex: '0', // 展开的菜单
       pagination: {},
       loading: false,
+      frontNoteList: [],
       // menu
       menuData: [
         {
@@ -180,59 +191,20 @@ export default {
     }
   },
   watch: {},
-  created() {},
+  created() {
+    this.getFrontNoteList()
+  },
   methods: {
-    handleSelect() {},
-    handleClick(e) {
-      console.log('click', e)
-    },
-    titleClick(e) {
-      console.log('titleClick', e)
-    },
-    handleSet() {
-      let newArr = []
-      this.fileList.filter((item) => {})
-      console.log('fileList-----', this.fileList, '---fileList-set----', newArr)
-    },
-    showModal() {
-      this.visible = true
-    },
-    handleOk() {
-      console.log('ok')
-    },
-    handleCancel() {
-      this.visible = false
-    },
-    // 表单提交
-    submit() {
-      this.form.validateFields((err) => {
-        if (!err) {
-          console.log('success')
-        } else {
-          console.log('err---', err)
-        }
+    getFrontNoteList() {
+      this.$api.getFrontNoteList().then((res) => {
+        const {
+          data: { list, total },
+        } = res
+        this.frontNoteList = list
+        console.log(this.frontNoteList, '/////')
       })
     },
-    handleDel(data) {
-      console.log(data, '-----')
-      this.$message.success(`delData:,${data.name}`)
-    },
-    handleEdit(data) {
-      console.log('data---', data)
-    },
-    handleCancel() {
-      this.previewVisible = false
-    },
-    async handlePreview(file) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj)
-      }
-      this.previewImage = file.url || file.preview
-      this.previewVisible = true
-    },
-    handleChange({ fileList }) {
-      this.fileList = fileList
-    },
+    handleSelect() {},
   },
 }
 </script>
@@ -303,11 +275,17 @@ export default {
               font-size: 12px;
               letter-spacing: 0.2px;
               padding: 0;
-              margin: 0 5px 0 0;
+              margin: 0 10px 0 0;
               color: #748594;
               position: relative;
-              line-height: 1.5;
+              line-height: 25px;
               display: inline-block;
+              img {
+                width: 25px;
+                height: 25px;
+                border-radius: 25px;
+                vertical-align: middle;
+              }
             }
           }
         }
@@ -332,14 +310,14 @@ export default {
       width: 1170px;
       .social-footer {
         .i-weibo {
-          background-image: url('../../assets/images/weibo.png');
+          // background-image: url('../../assets/images/weibo.png');
           width: 20px;
           height: 20px;
         }
-        .i-mail {
-        }
-        .i-weChat {
-        }
+        // .i-mail {
+        // }
+        // .i-weChat {
+        // }
       }
     }
   }
