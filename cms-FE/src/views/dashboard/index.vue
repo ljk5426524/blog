@@ -18,7 +18,7 @@ export default {
       return getCookie('avatar')
     },
     userName() {
-      return getCookie('userName')
+      return getCookie('username')
     },
     roleDesc() {
       return getCookie('roleDesc')

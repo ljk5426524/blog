@@ -224,3 +224,11 @@ export function updateComment(data) {
     data,
   })
 }
+
+export function getFrontNoteList(data) {
+  return request({
+    url: '/getFrontNoteList',
+    method: 'get',
+    data,
+  })
+}

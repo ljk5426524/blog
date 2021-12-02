@@ -2,13 +2,17 @@ const mysql = require("../utils/mysql")
 const dayjs = require("dayjs")
 
 async function getCommentList(data, page = 1, size = 10) {
-  const { keyWord } = data
+  const { keyWord, noteId } = data
   let sql = `SELECT c.id,c.content,c.state,c.create_time,n.title from comment_list c LEFT JOIN note_list n on c.note_id = n.note_id `
   let values = []
 
   if (keyWord) {
-    sql += " where title like ?"
+    sql += " where c.title like ?"
     values.push(`%${keyWord}%`)
+  }
+  if (noteId) {
+    sql += `${keyWord ? " and" : " where c.note_id = ?"} `
+    values.push(noteId)
   }
   // 分页
   sql += " limit ?, ?"

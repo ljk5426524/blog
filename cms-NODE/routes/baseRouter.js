@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const noteModule = require("../module/noteModule")
 const userModule = require("../module/userModule")
+const frontModule = require("../module/frontModule")
 const commentModule = require("../module/commentModule")
 const { tokenVerification } = require("../utils/middlewares")
 
@@ -25,4 +26,6 @@ router.put("/updateFrontUser", tokenVerification, userModule.updateFrontUser) //
 // 评论
 router.get("/getCommentList", tokenVerification, commentModule.getCommentList) // 评论列表
 router.put("/updateComment", tokenVerification, commentModule.updateComment) // 评论列表
+
+router.get("/getFrontnoteList", tokenVerification, frontModule.getNoteList)
 module.exports = router

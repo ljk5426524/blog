@@ -14,7 +14,7 @@ async function getLastSelectTotal() {
 // 根据用户名密码获取账户信息
 async function getUserInfo(data) {
   const { username, password } = data
-  let sql = `select * from user_list where username = ?`
+  let sql = `select * from front_user_list where username = ?`
   let vals = [username]
 
   if (password) {
